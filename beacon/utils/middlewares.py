@@ -79,10 +79,10 @@ def setup(app):
     session_setup(app, EncryptedCookieStorage(secret_key))
 
     # CSRF middleware
-    aiohttp_csrf.setup(app,
-                       policy=aiohttp_csrf.policy.FormPolicy(CSRF_FIELD_NAME),
-                       storage=aiohttp_csrf.storage.SessionStorage(SESSION_STORAGE))
-    app.middlewares.append(aiohttp_csrf.csrf_middleware)
+    # aiohttp_csrf.setup(app,
+    #                    policy=aiohttp_csrf.policy.FormPolicy(CSRF_FIELD_NAME),
+    #                    storage=aiohttp_csrf.storage.SessionStorage(SESSION_STORAGE))
+    # app.middlewares.append(aiohttp_csrf.csrf_middleware)
 
 
     # Capture 404 and 500
