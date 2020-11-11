@@ -123,25 +123,29 @@ def beacon_biosample_v20(row):
 def beacon_individual_v20(row):
     schema_name = 'beacon-individual-v2.0.0-draft.2'
     return {
-        'subjectId': row['individual_stable_id'],
-        'datasetIds': row['dataset_ids'],
-        'taxonId': row['taxon_id'],
-        'sex': row['sex_ontology'],
-        'ethnicity': row['ethnicity_ontology'],
-        'geographicOrigin': row['geographic_origin_ontology'],
-        'phenotypicFeatures': filter_hstore(row['phenotypic_features'], schema_name),
-        'diseases': filter_hstore(row['diseases'], schema_name),
-        'pedigrees': filter_hstore(row['pedigrees'], schema_name),
-        'handovers': [jsonb(h) for h in row['handovers']],
+        'subjectId': row.get('individual_stable_id', ''),
+        'datasetIds': row.get('dataset_ids', ''),
+        'taxonId': row.get('taxon_id', ''),
+        'sex': row.get('sex_ontology', ''),
+        'ethnicity': row.get('ethnicity_ontology', ''),
+        'geographicOrigin': row.get('geographic_origin_ontology', ''),
+        'phenotypicFeatures': filter_hstore(row.get('phenotypic_features', ''), schema_name),
+        'diseases': row.get('diseases', ''),
+        # 'diseases': filter_hstore(row.get('diseases', []), schema_name),
+        # 'treatments': filter_hstore(row.get('treatments', []), schema_name),  # Added to match the newest schema; to be added in the matching DB part
+        # 'interventions': filter_hstore(row.get('interventions', []), schema_name),  # As above... TODO: remove this comment after it works
+        'pedigrees': filter_hstore(row.get('pedigrees', []), schema_name),
+        'handovers': [jsonb(h) for h in row.get('handovers', [])],
         'info': {
-            'sraFamilyId': row['sra_family_id'],
-            'alternativeIds': row['alternative_ids'],
-            'race': row['race'],
-            'weightKg': row['weight_kg'],
-            'heightCm': row['height_cm'],
-            'bloodType': row['blood_type'],
-            'medications': [jsonb(v) for v in row['medications']],
-            'procedures': [jsonb(v) for v in row['procedures']],
-        },
+            'medications': row.get('medications', '{}'),
+            # 'medications': [jsonb(v) for v in row.get('medications', [])
+            # 'sraFamilyId': row.get('sra_family_id', ''),     # TODO: remove if no longer needed
+            # 'alternativeIds': row.get('alternative_ids', ''),
+            'race': row.get('race', '')
+            # 'weightKg': row.get('weight_kg', ''),
+            # 'heightCm': row.get('height_cm', ''),
+            # 'bloodType': row.get('blood_type', ''),
+            # 'procedures': [jsonb(v) for v in row.get('procedures', '')],
+        }
     }
 

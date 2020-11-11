@@ -360,6 +360,46 @@ async def _fetch_individuals(connection,
     Contacts the DB to fetch the info.
     Returns a pd.DataFrame with the response.
     """
+
+    # TODO: move the SQL code into a separate view/function
+    # TODO: change s5_3_1 to {conf.database_schema} once the queries are fine
+    query = f"""SELECT  distinct on (p.person_id)
+                        p.person_id as subject_id,
+                        c_sex.concept_name as sex,
+                        'NCBITaxon:9606' as taxon_id,
+                        c_eth.concept_name as ethnicity,
+                        loc.county as geographic_origin,
+                        dis.diseases AS diseases,
+                        med.medications as medications,
+                        c_rac.concept_name as race
+    FROM    s5_3_1.person as p inner join s5_3_1.condition_occurrence as c on p.person_id = c.person_id
+            inner join s5_3_1.concept as c_sex on p.gender_concept_id = c_sex.concept_id
+            inner join s5_3_1.concept as c_eth on p.ethnicity_concept_id = c_eth.concept_id
+            inner join s5_3_1.concept as c_rac on p.race_concept_id = c_rac.concept_id
+            inner join s5_3_1.location as loc on p.location_id = loc.location_id
+            left join lateral (
+                select
+                    d.person_id,
+                    array_agg(concept_name) as diseases
+                from s5_3_1.condition_occurrence d join s5_3_1.concept c on d.condition_concept_id = c.concept_id
+                where person_id = p.person_id
+                group by d.person_id
+            ) as dis ON TRUE
+            left join lateral (
+                select
+                    d.person_id,
+                    array_agg(concept_name) as medications
+                from s5_3_1.drug_exposure d join s5_3_1.concept c on d.drug_concept_id = c.concept_id
+                where person_id = p.person_id
+                group by d.person_id
+            ) as med ON TRUE LIMIT 10;
+    """
+
+    LOG.debug("QUERY: %s", query)
+    statement = await connection.prepare(query)
+    response = await statement.fetch()
+
+    """
     # connection.add_log_listener(simple_listener)
     dollars = ", ".join([f"${i}" for i in range(1, 21)])  # 1..20
     query = f"SELECT * FROM {conf.database_schema}.query_individuals({dollars});"
@@ -386,7 +426,7 @@ async def _fetch_individuals(connection,
                                      qparams_db.limit,  # _limit integer
                                      # we keep a list for the moment
                                      [qparams_db.requestedSchema[0]])  # requestedSchemas
-    
+    """
 
     for record in response:
         yield record
