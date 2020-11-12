@@ -20,4 +20,6 @@ supported_schemas = {
     'ga4gh-phenopacket-biosample-v1.0': alternative.ga4gh_phenopackets_biosamples_v10,
     # variant representation format
     'ga4gh-variant-representation-v1.1': alternative.ga4gh_vr_variant_v11,
+    'hl7-fhir-biosample-v1.0': default.beacon_biosample_v20,
+    'hl7-fhir-individual-v1.0': default.beacon_individual_v20
 }

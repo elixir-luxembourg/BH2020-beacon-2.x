@@ -139,6 +139,20 @@ class GVariantsParameters(GVariantParametersBase):
                                   default='beacon-variant-annotation-v2.0.0-draft.2')
 
 
+class FHIRBiosamplesParameters(GVariantParametersBase):
+    requestedSchema = SchemaField('hl7-fhir-biosample-v1.0',
+                                  default='hl7-fhir-biosample-v1.0')
+
+    filters = ListField(items=RegexField(r'.*:.+=?>?<?[0-9]*$'), default=None)
+
+
+class FHIRIndividualsParameters(GVariantParametersBase):
+    requestedSchema = SchemaField('hl7-fhir-individual-v1.0',
+                                  default='hl7-fhir-individual-v1.0')
+
+    filters = ListField(items=ChoiceField('male', 'female', 'other', 'unknown'), default=None)
+
+
 def generic_handler(log_name, proxy, fetch_func, build_response_func):
     async def wrapper(request):
         LOG.info('Running a request for %s', log_name)
