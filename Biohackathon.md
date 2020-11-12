@@ -66,18 +66,27 @@ fhir_base_endpoint = 'baseR4'
 
 This will make queries to ``http://hapi.fhir.org/baseR4``.
 
-To make the REST service work has been implemented:
+To make the REST service work the following has been implemented:
 
 - a REST client ``beacon/utils/fhir_client.py``
 - one new schema for generic FHIR Resources in ``beacon/endpoints/rest/schemas/alternative.py`` that just returns the 
   data as returned by the FHIR Server
-  
-Two types of filters has been tested:
 
-- biosamples, that queries for Specimen FHIR Resource. A filter that query by specimen type has been implemented. 
+The endpoint implemented are:
+
+- /api/fhir-individuals: gets all individuls (i.e Patients) in FHIR Server. It also supports the filters parameter
+- /api/fhir-individuals/{target_id_req}: gets the individual with id target_id_req 
+- /api/fhir-individuals/{target_id_req}/biosamples: gets the biosamples (i.e., the Specimens) of individual with id target_id_req
+- /api/fhir-biosamples/: gets all biosamples. It also supports the filters paramater to filter
+
+In order to allow filtering, two types of filters has been implemented:
+
+- gender for individuals: it queries for Patient FHIR Resource by gender. 
+   In this case the FHIR internal terminology is used, so possible values for the filters are (male, female, other, unknown)
+- sample type for biosamples: it queries for Specimen FHIR Resource by specimen type (e.g., venous blood).
     The terminology used is SNOMED-CT
-- individuals, that queries for Patient FHIR Resource. A filter that query by gender has been implemented. 
-    In this case the FHIR internal terminology is used so possible filters are (male, female, other, unknown)
     
-In the index.html it has been added a "FHIR Filter" section that will perform the queries for blood biosamples and for 
-male/female individuals
+In the index.html it hasa been added two sections:
+
+- FHIR Listings to get all individuals, a specific individual and the biosamples of a specific individual
+- FHIR Filter section that will perform the queries for venous blood biosamples and for male/female individuals

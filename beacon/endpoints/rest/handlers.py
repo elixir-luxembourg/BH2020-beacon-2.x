@@ -25,3 +25,4 @@ gvariants_by_individual = generic_handler('gvariants'  , gvariants_proxy  , db.f
 
 fhir_individuals_by_individual = generic_handler('fhir-individuals' , fhir_individuals_proxy , fhir_client.fetch_individuals_by_individuals , build_fhir_biosample_or_individual_response)
 fhir_biosamples_by_biosample = generic_handler('fhir-biosamples' , fhir_biosamples_proxy , fhir_client.fetch_biosamples_by_biosample , build_fhir_biosample_or_individual_response)
+fhir_biosamples_by_individual = generic_handler('fhir-biosamples' , fhir_biosamples_proxy , fhir_client.fetch_biosamples_by_individuals , build_fhir_biosample_or_individual_response)

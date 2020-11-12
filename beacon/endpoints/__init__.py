@@ -48,6 +48,8 @@ routes = [
     web.get('/api/individuals/{target_id_req}/biosamples'   , rest_handlers.biosamples_by_individual),
 
     web.get('/api/fhir-individuals'                         , rest_handlers.fhir_individuals_by_individual),
+    web.get('/api/fhir-individuals/{target_id_req}'         , rest_handlers.fhir_individuals_by_individual),
+    web.get('/api/fhir-individuals/{target_id_req}/biosamples' , rest_handlers.fhir_biosamples_by_individual),
 
     # # GVariant
     web.get('/api/g_variants'                               , rest_handlers.gvariants_by_variant),

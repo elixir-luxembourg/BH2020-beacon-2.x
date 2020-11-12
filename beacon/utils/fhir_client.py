@@ -38,8 +38,11 @@ class FHIRConnection:
                     LOG.error(f"An error ocurred: {err}")
                 else:
                     json_response = await response.json()
-                    for resource in json_response.get('entry', []):
-                        yield resource
+                    if json_response.get('resourceType') == 'Bundle':
+                        for resource in json_response.get('entry', []):
+                            yield resource
+                    else:
+                        yield json_response
 
         return inner
 
@@ -62,9 +65,27 @@ async def fetch_biosamples_by_biosample(session, fhir_base_url, qparams_db, data
 
 
 @pool.asyncgen_execute
+async def fetch_biosamples_by_individuals(session, fhir_base_url, qparams_db, datasets, authenticated):
+    individual_id = qparams_db.targetIdReq
+
+    url = f"{fhir_base_url}/Specimen"
+    if individual_id is not None:
+        url = f"{url}?patient=Patient/{individual_id}"
+    LOG.debug("Querying url %s", url)
+
+    return await session.request(method='GET', url=url)
+
+
+@pool.asyncgen_execute
 async def fetch_individuals_by_individuals(session, fhir_base_url, qparams_db, datasets, authenticated):
     filters = qparams_db.filters
+    individual_id = qparams_db.targetIdReq
 
-    url = f"{fhir_base_url}/Patient?gender={','.join(filters)}"
+    url = f"{fhir_base_url}/Patient"
 
+    if individual_id:
+        url = f"{url}/{individual_id}"
+    elif filters and len(filters) > 0:  # only if we're not getting the exact patient we apply the gender filter
+        url = f"{url}?gender={','.join(filters)}"
+    LOG.debug("Querying url %s", url)
     return await session.request(method='GET', url=url)
