@@ -51,3 +51,33 @@ Take a look into `deploy/omopdb/omop_query.sql`.
 ## 5. Modifications to the code to do the mapping:
  * `beacon/endpoints/rest/schema/default.py` ==> patched default schema's individuals to contain OMOP's data
  * `beacon/utils/db.py` ==> `fetch_individuals` function contains SQL code to get the individuals data
+ 
+## 6. FHIR Queries
+
+A prototype to perform FHIR queries against a FHIR REST server has been implemented. For the purpose of Biohackaton 
+the HAPI test server has been used. The REST server configuration is in the ``conf.py`` file with the following values
+
+```
+fhir_schema = 'http'
+fhir_host = 'hapi.fhir.org'
+fhir_port = '80'
+fhir_base_endpoint = 'baseR4'
+``` 
+
+This will make queries to ``http://hapi.fhir.org/baseR4``.
+
+To make the REST service work has been implemented:
+
+- a REST client ``beacon/utils/fhir_client.py``
+- one new schema for generic FHIR Resources in ``beacon/endpoints/rest/schemas/alternative.py`` that just returns the 
+  data as returned by the FHIR Server
+  
+Two types of filters has been tested:
+
+- biosamples, that queries for Specimen FHIR Resource. A filter that query by specimen type has been implemented. 
+    The terminology used is SNOMED-CT
+- individuals, that queries for Patient FHIR Resource. A filter that query by gender has been implemented. 
+    In this case the FHIR internal terminology is used so possible filters are (male, female, other, unknown)
+    
+In the index.html it has been added a "FHIR Filter" section that will perform the queries for blood biosamples and for 
+male/female individuals
