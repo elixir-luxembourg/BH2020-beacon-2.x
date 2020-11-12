@@ -197,3 +197,8 @@ def ga4gh_vr_variant_v11(row):
             },
         }
     }
+
+
+def hl7_fhir_generic_v1(row):
+    # returns directly the fhir record without any mapping
+    return row
