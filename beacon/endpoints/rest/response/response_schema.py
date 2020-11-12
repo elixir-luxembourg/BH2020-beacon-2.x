@@ -208,3 +208,8 @@ def build_biosample_or_individual_response(data, qparams):
     """"Fills the `results` part with the format for biosample or individual data"""
 
     return [qparams.requestedSchema[1](row) for row in data]
+
+
+def build_fhir_biosample_or_individual_response(data, qparams):
+
+    return data

@@ -77,6 +77,13 @@ database_name = 'beacon'
 database_schema = 'public' # comma-separated list of schemas
 database_app_name = 'beacon' # Useful to track connections
 
+#
+# FHIR REST Service
+#
+fhir_schema = 'http'
+fhir_host = 'hapi.fhir.org'
+fhir_port = '80'
+fhir_base_endpoint = 'baseR4'
 
 #
 # Web server configuration

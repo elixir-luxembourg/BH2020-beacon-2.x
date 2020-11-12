@@ -77,6 +77,12 @@ database_name = 'beacon'
 database_schema = 'public' # comma-separated list of schemas
 database_app_name = 'beacon-appname' # Useful to track connections
 
+
+fhir_schema = 'http'
+fhir_host = 'hapi.fhir.org'
+fhir_port = '80'
+fhir_base_endpoint = 'baseR4'
+
 #
 # Web server configuration
 # Note: a Unix Socket path is used when behind a server, not host:port

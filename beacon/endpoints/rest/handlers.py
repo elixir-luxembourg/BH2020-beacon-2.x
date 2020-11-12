@@ -1,6 +1,7 @@
-from ...utils import db
+from ...utils import db, rest_client
 from .response.response_schema import (build_variant_response,
-                                       build_biosample_or_individual_response)
+                                       build_biosample_or_individual_response,
+                                       build_fhir_biosample_or_individual_response)
 from . import BiosamplesParameters, GVariantsParameters, IndividualsParameters, generic_handler
 
 biosamples_proxy = BiosamplesParameters()
@@ -18,3 +19,5 @@ gvariants_by_variant = generic_handler('gvariants'  , gvariants_proxy  , db.fetc
 individuals_by_individual = generic_handler('individuals', individuals_proxy, db.fetch_individuals_by_individual, build_biosample_or_individual_response)
 biosamples_by_individual = generic_handler('biosamples' , biosamples_proxy , db.fetch_biosamples_by_individual , build_biosample_or_individual_response)
 gvariants_by_individual = generic_handler('gvariants'  , gvariants_proxy  , db.fetch_variants_by_individual   , build_variant_response)
+
+fhir_biosamples_by_biosample = generic_handler('fhir-biosamples' , biosamples_proxy , rest_client.fetch_biosamples_by_biosample , build_fhir_biosample_or_individual_response)

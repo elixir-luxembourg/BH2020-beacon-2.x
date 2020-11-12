@@ -38,7 +38,9 @@ routes = [
     web.get('/api/biosamples/{target_id_req}'               , rest_handlers.biosamples_by_biosample),
     web.get('/api/biosamples/{target_id_req}/g_variants'    , rest_handlers.gvariants_by_biosample),
     web.get('/api/biosamples/{target_id_req}/individuals'   , rest_handlers.individuals_by_biosample),
-    
+
+    web.get('/api/fhir-biosamples'                          , rest_handlers.fhir_biosamples_by_biosample),
+
     # # Individuals
     web.get('/api/individuals'                              , rest_handlers.individuals_by_individual),
     web.get('/api/individuals/{target_id_req}'              , rest_handlers.individuals_by_individual),
